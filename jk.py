@@ -1,5 +1,4 @@
 import turtle
-import time
 import random
 
 global score, high_score, delay
@@ -93,6 +92,7 @@ wn.onkeypress(go_right,"d")
 
 # Main game loop function
 def game_loop():
+    global score, high_score, delay
     wn.update()
 
     # Move the body
@@ -136,7 +136,14 @@ def game_loop():
         head.goto(0,0)
         head.direction="stop"
 
-         
+        for segment in segments:
+             segment.goto(1000, 1000)
+        segments.clear()
+        
+        score = 0
+        delay = 0.1
+        pen.clear()
+        pen.write("Score:{}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal"))     
 
     # Check for collision with food
     if head.distance(food) < 20:
