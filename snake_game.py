@@ -1,5 +1,6 @@
 import turtle
 import time
+import random
 delay=0.1
 
 # Window
@@ -17,6 +18,18 @@ head.color("black")
 head.penup()
 head.goto(0, 0)
 head.direction = "stop"
+
+#snake food
+food = turtle.Turtle()
+food.speed(0)
+food.shape("circle")
+food.color("red")
+food.penup()
+food.goto(0, 100)
+
+segments=[]
+
+
 
 #Functions
 
@@ -61,9 +74,35 @@ wn.onkeypress(go_right,"d")
 # Main game loop function
 def game_loop():
     wn.update()
-    wn.ontimer(game_loop, 100)  # repeat every 100ms
+
+    # Move the body
+    for index in range(len(segments)-1, 0, -1):
+        x = segments[index-1].xcor()
+        y = segments[index-1].ycor()
+        segments[index].goto(x, y)
+
+    if len(segments) > 0:
+        x = head.xcor()
+        y = head.ycor()
+        segments[0].goto(x, y)
+
+    # Move the head EVERY TIME
     move()
-    time.sleep(delay)
+
+    # Check for collision with food
+    if head.distance(food) < 20:
+        x = random.randint(-290, 290)
+        y = random.randint(-290, 290)
+        food.goto(x, y)
+
+        new_segment = turtle.Turtle()
+        new_segment.speed(0)
+        new_segment.shape("square")
+        new_segment.color("grey")
+        new_segment.penup()
+        segments.append(new_segment)
+
+    wn.ontimer(game_loop, int(delay * 1500))
 
 game_loop()
 wn.mainloop()
