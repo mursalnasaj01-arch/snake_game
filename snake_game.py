@@ -5,7 +5,7 @@ delay=0.1
 
 # Window
 wn = turtle.Screen()
-wn.title("Snake Game by Nasaj")
+wn.title("Snake Game")
 wn.bgcolor("green")
 wn.setup(width=600, height=600)
 wn.tracer(0)
@@ -34,16 +34,20 @@ segments=[]
 #Functions
 
 def go_up():
-    head.direction="up"
+    if head.direction !="down":
+        head.direction="up"
 
 def go_down():
-    head.direction="down"
+    if head.direction !="up":
+        head.direction="down"
 
 def go_left():
-    head.direction="left"
+    if head.direction !="right":
+        head.direction="left"
 
 def go_right():
-    head.direction="right"        
+    if head.direction !="left":
+        head.direction="right"        
 
 
 
@@ -89,6 +93,25 @@ def game_loop():
     # Move the head EVERY TIME
     move()
 
+    #Check for head colliosion with the body segments
+    for segment in segments:
+        if segment.distance(head) <20:
+            head.goto(0,0)
+            head.direction="stop"
+            #Hide the segments
+            for segment in segments:
+                segment.goto(1000,1000)
+
+            #Clear the segments list
+            segments.clear()  
+
+    #check for a collision with the border
+    if head.xcor()>290 or head.xcor()<-290 or head.ycor() >290 or head.ycor()<-290:
+        head.goto(0,0)
+        head.direction="stop"
+
+         
+
     # Check for collision with food
     if head.distance(food) < 20:
         x = random.randint(-290, 290)
@@ -102,7 +125,7 @@ def game_loop():
         new_segment.penup()
         segments.append(new_segment)
 
-    wn.ontimer(game_loop, int(delay * 1500))
+    wn.ontimer(game_loop, int(delay * 1000))
 
 game_loop()
 wn.mainloop()
